@@ -1,0 +1,6 @@
+# Robotarm 2D scan with the following settings:
+# scan_size=0.1, 
+# scan_step=0.1, 
+# n_meas=10.0, 
+# nudge=0.0 
+time,n_meas,xreal,yreal,zreal,x,y,z,col,row,power,err_power
