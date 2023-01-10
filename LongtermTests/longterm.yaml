@@ -1,0 +1,35 @@
+
+longterm:
+  n_longterm_times: 1
+  n_times: 1
+  sleeptime: 5 #s
+  trigger_delay: 315 #ns  14/12/2022 measure
+  dbm_ip: '149.217.10.193'
+  port: 50051
+  
+chec1:
+  data_dir: '/data/Temp/longterm/'
+
+pedestal:
+  trigger_rate_ped = 500 #Hz
+
+CHEC_Local:
+  rdir: 'Results'
+  tmp_dir: "/d2/DarkBox_tmp/tmp/"
+  local_data_dir: "/d2/DarkBox_tmp/longterm_data/"
+
+camera:
+  server_ip: '192.168.100.95'
+  client_ip: '192.168.100.100'
+
+dynamicrange:
+  
+  trigger_rate_dr: 600 #Hz
+  warm_up: 1 #mins
+  def_obs: "/home/cta/Software/CHECSInterface/trunk/config/ASTRI/observing-mpik_longterm.cfg"
+  #def_hv: "/home/cta/Software/CHECSInterface/trunk/config/ASTRI/hv/hv_astri_50pe100mv.cfg"
+  def_hv: "/data/Temp/HV-15/hvsetting_Run16447.cfg"
+  def_ready: "/home/cta/Software/CHECSInterface/trunk/config/ASTRI/ready-auto_obs-mpik.cfg"
+  
+analysis:
+  n_sigma = 1
