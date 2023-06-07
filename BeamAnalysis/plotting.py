@@ -4,9 +4,29 @@ from beamanalysis.utils import *
 from map_scan2D import *
 from matplotlib.ticker import MaxNLocator
 from mpl_toolkits.mplot3d import Axes3D
-plt.style.use('tableau-colorblind10')
+#plt.style.use('tableau-colorblind10')
+import seaborn as sns
+sns.set_context("paper")
+def plot_map(data, function, fit_output, scan_sets):
+    x,y,z = data
+    scan_size, scan_step, = scan_sets
 
+    beta = fit_output.beta
+    fig, ax = plt.subplots()  
 
+    x_grid, y_grid = np.meshgrid(
+        np.linspace(np.min(x), np.max(x), 1000), np.linspace(np.min(y), np.max(y), 1000)
+    )
+    z_fit = function(beta, (x_grid, y_grid)).reshape(x_grid.shape)
+    levels = np.linspace(np.min(z_fit), np.max(z_fit), 10)
+   
+    plot_map_2d(x =x, y = y, z =  z, scan_size= scan_size, scan_step =scan_step, draw_camera=True, ax =ax)
+
+    ax.contour(x_grid, y_grid, z_fit, levels=levels, colors = '#FF800E')
+    fig.tight_layout()
+    #fig.suptitle("2D SCAN - MAP")
+    plt.title("Data + contour from fit")
+    return fig
 def plot_maps(data, function, fit_output, scan_sets):
     x,y,z = data
     scan_size, scan_step, = scan_sets
@@ -22,12 +42,12 @@ def plot_maps(data, function, fit_output, scan_sets):
    
     plot_map_2d(x =x, y = y, z =  z, scan_size= scan_size, scan_step =scan_step, draw_camera=True, ax =ax[0])
 
-    ax[0].set_title("Data + contour from fit")
+    #ax[0].set_title("Data + contour from fit")
     ax[0].contour(x_grid, y_grid, z_fit, levels=levels, colors = '#FF800E')
     _, xedges, yedges = plot_map_2d(x =x, y = y, z =  function(beta, (x, y)), scan_size= scan_size, scan_step =scan_step, draw_camera=True, ax =ax[1])
     ax[1].set_title("ODR Fit result")
     fig.tight_layout()
-    fig.suptitle("2D SCAN - MAP")
+    #fig.suptitle("2D SCAN - MAP")
 
     return xedges, yedges, fig
 
@@ -42,6 +62,7 @@ def plot_initial_fitting(data, masks, function, outputs, bins):
     axs[0].hist(x[mx], weights=function(out_x.beta, x[mx]), bins=bin_x, histtype='step', label = "ODR Fit",color= '#FF800E')
     axs[0].set_xlabel("x [m]")
     axs[0].set_ylabel("Power [W]")
+    axs[0].set_yscale('log')
     axs[0].set_title('Slicing over y-axis - 1D fit')
     axs[0].legend(loc = "lower center")
     axs[1].hist(y[my], weights=z[my], bins=bin_y, histtype='step', label ="Data",linestyle='-')
@@ -54,10 +75,13 @@ def plot_initial_fitting(data, masks, function, outputs, bins):
 
     return fig
 
+
+    
 def plot_zero_slices(data, function, fit_output, scan_sets):
     x,y,z = data
     scan_size, scan_step, = scan_sets
     beta = fit_output.beta
+
     fig, ax = plt.subplots(1,2, figsize = (12,6))
    
     bins = np.linspace(
@@ -69,7 +93,6 @@ def plot_zero_slices(data, function, fit_output, scan_sets):
     ygr = np.zeros(np.shape(xgr))
     power_fit = function(beta, (xgr, ygr))
     ax[0].hist(xgr, weights =power_fit, bins = bins, histtype = "step", label = "ODR fit",color= '#FF800E')
-    ax[0].set_yscale('log')
     ax[0].set_xlabel("x [m]")
     ax[0].set_ylabel("Power [W]")
     ax[0].set_title("Power along y = 0")
@@ -77,7 +100,6 @@ def plot_zero_slices(data, function, fit_output, scan_sets):
     xgr = np.zeros(np.shape(ygr))
     power_fit = function(beta, (xgr, ygr))
     ax[1].hist(ygr, weights =power_fit, bins = bins, histtype = "step", label = "ODR fit",color= '#FF800E')
-    ax[1].set_yscale('log')
     ax[1].set_title("Power along x = 0")    
 
     #DATA (x = 0 and y = 0 slice)
@@ -90,6 +112,8 @@ def plot_zero_slices(data, function, fit_output, scan_sets):
     ax[1].set_ylabel("Power [W]")
     ax[0].legend(loc = "lower center")
     ax[1].legend(loc = "lower center")
+    ax[0].set_yscale('log')
+    ax[1].set_yscale('log')
     fig.suptitle("Power along (x,y) = (0, 0)")
     return fig
 
@@ -109,7 +133,7 @@ def plot_slices(data,function, fit_output, scan_sets,  n_steps):
         ax[1].plot(y[mx],z_fit[mx],label = sel,color= '#FF800E')
         ax[1].plot(y[mx],z[mx],linestyle='-',color= '#006BA4')
 
-    ax[0].set_yscale('log')
+    
     ax[0].set_xlabel("x [m]")
     ax[0].set_ylabel("Power [W]")
     ax[0].set_title("Slicing along y")
@@ -119,6 +143,8 @@ def plot_slices(data,function, fit_output, scan_sets,  n_steps):
     plt.figtext(0.47, 0.93, "Data", color= '#006BA4',fontsize='large', ha ='right')
     plt.figtext(0.53, 0.93, "Fit",  color= '#FF800E',fontsize='large', ha ='left')
     plt.figtext(0.50, 0.93, ' vs ', fontsize='large', ha ='center')
+    ax[0].set_yscale('log')
+    ax[1].set_yscale('log')
     fig.suptitle("Power along x and y ")
  
     return fig
@@ -180,7 +206,10 @@ def plot_residuals_2D(out, function, xy, z_true, scan_sets, title):
         y,
         bins=bins_,
         weights= residuals,
+        vmin=min(residuals),
+        cmin=1e-16
     )
+    draw_camera_outline(axs, color="k", lw=2)
     axs.set_xlabel("x [m]")
     axs.set_ylabel("y [m]")
     plt.colorbar(image, ax = axs, label="$\mathregular{z_{true} - z_{fit}}$")
@@ -191,12 +220,12 @@ def plot_residuals_2D(out, function, xy, z_true, scan_sets, title):
 def plot_correction_factors(factors):
     Rx, Ry = factors    
     fig, ax = plt.subplots(1,2, figsize = (12,6))
-    binx = np.linspace(np.amin(Rx), np.amax(Rx), int(len(Rx)/50))
+    binx = np.linspace(np.amin(Rx), np.amax(Rx), int(len(Rx)/10))
     ax[0].hist(Rx,  histtype = "step", bins = binx)
     ax[0].set_yscale("log")
     ax[0].set_xlabel("$\mathregular{Correction\ factor\ along\ x}$")
     ax[0].set_ylabel("Counts")
-    biny = np.linspace(np.amin(Ry), np.amax(Ry), int(len(Ry)/50))
+    biny = np.linspace(np.amin(Ry), np.amax(Ry), int(len(Ry)/10))
     ax[1].hist(Ry, histtype = "step", bins = biny)
     ax[1].set_yscale("log")
     ax[1].set_xlabel("$\mathregular{Correction\ factor\ along\ y}$")
@@ -235,6 +264,8 @@ def plot_res_percentage2D(out, function, xy, z_true, scan_sets, title):
         y,
         bins=bins_,
         weights= pe,
+        vmin=min(pe),
+        cmin=1e-16
     )
     axs.set_xlabel("x [m]")
     axs.set_ylabel("y [m]")

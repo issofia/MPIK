@@ -5,7 +5,9 @@ import numpy as np
 import pandas as pd
 
 from beamanalysis.utils import *
-
+import seaborn as sns
+#sns.set_context("notebook")
+sns.set_context("paper")
 
 def print_mean_std(l, wavelength=405e-9, rate=1e6, a_sipm=36, a_pm=83.3):
     print(f"Mean     = {np.mean(l):.2e} W")
@@ -17,6 +19,8 @@ def print_mean_std(l, wavelength=405e-9, rate=1e6, a_sipm=36, a_pm=83.3):
 
 
 def plot_map_2d(x, y, z, scan_size, scan_step, draw_camera=True, ax=None, title = None):
+    sns.set_context("notebook")
+
     if ax == None:
         fig, ax = plt.subplots()
     bins_ = np.linspace(
@@ -88,6 +92,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     filename = args.file
+    
 
     scan_size, scan_step = get_scan_settings(filename)
 

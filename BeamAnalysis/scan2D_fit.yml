@@ -5,6 +5,8 @@ experimental_data:
     #file: '../../../CHEC-S/Robot_Arm/d20230307/d20230307_163512_2dscan/d20230307_163512_2dscan.csv' #laser3m
     #file: '../../../CHEC-S/Robot_Arm/d20230314/d20230314_153523_2dscan/d20230314_153523_2dscan.csv' #NSB MAX 1m 
     #file: '../../../CHEC-S/Robot_Arm/d20230314/d20230314_171956_2dscan/d20230314_171956_2dscan.csv' #NSB MIN 1m
+    #file:  '../../../CHEC-S/Robot_Arm/d20230308/d20230308_214914_2dscan/d20230308_214914_2dscan.csv' # NSB MIN 2m
+    #file: '../../../CHEC-S/Robot_Arm/d20230307/d20230307_200455_2dscan/d20230307_200455_2dscan.csv' #NSB MIN 3m
     distance: 1. #m
     source: 'laser' #NSB or laser
     filter: 'MIN'   #only for NSB
@@ -13,7 +15,9 @@ instrumental_specs:
     sensor_size: 10.3e-03 #m
     calibration_uncertainty: 0.01 # 1% on detector
     newport_accuracy: 0.0025 #accuracy of NEWPORT844-PE-USB
-    newport_resolution: 1e-11 #W
+    newport_resolution: 1e-11 #W, negligible
+    NSB_wavelength_sigma: 0.0392 #due to the fact that LED is peaked at 405 but has a sigma != 0
+    NSB_wavelength_correction: 0.0254 #due to the fact that we always measure with set wavelength = 400 nm
 
 results:
     final_directory: './Results/'
