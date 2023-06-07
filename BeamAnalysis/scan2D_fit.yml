@@ -1,0 +1,20 @@
+experimental_data:
+    correction_file: '../../data/angle_correction/d20230208_154901_angle_scan/d20230208_154901_angle_scan.pkl'
+    file: '../../../CHEC-S/Robot_Arm/d20230314/d20230314_102902_2dscan/d20230314_102902_2dscan.csv' #laser1m
+    #file: '../../../CHEC-S/Robot_Arm/d20230308/d20230308_182017_2dscan/d20230308_182017_2dscan.csv' #laser2m
+    #file: '../../../CHEC-S/Robot_Arm/d20230307/d20230307_163512_2dscan/d20230307_163512_2dscan.csv' #laser3m
+    #file: '../../../CHEC-S/Robot_Arm/d20230314/d20230314_153523_2dscan/d20230314_153523_2dscan.csv' #NSB MAX 1m 
+    #file: '../../../CHEC-S/Robot_Arm/d20230314/d20230314_171956_2dscan/d20230314_171956_2dscan.csv' #NSB MIN 1m
+    distance: 1. #m
+    source: 'laser' #NSB or laser
+    filter: 'MIN'   #only for NSB
+
+instrumental_specs:
+    sensor_size: 10.3e-03 #m
+    calibration_uncertainty: 0.01 # 1% on detector
+    newport_accuracy: 0.0025 #accuracy of NEWPORT844-PE-USB
+    newport_resolution: 1e-11 #W
+
+results:
+    final_directory: './Results/'
+    plot_3D_beam: True 
