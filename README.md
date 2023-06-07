@@ -2,6 +2,9 @@
 MPIK data and works
 
 ## Folders
+- Documentation
+    - Instruments specs
+    - My Presentations
 - Beam Model Analysis
     - Scripts to describe the NSB and laser beams
 - Cherenkov Images:
@@ -21,4 +24,4 @@ MPIK data and works
     Data and plots
 
 ## Others
-- Powerpoint updates (Heidelberg-Turin meetings)
+- 
